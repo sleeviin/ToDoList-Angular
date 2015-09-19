@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="ToDoList">
 <head>
 	<title>ToDo List with Angular</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.2.2/css/flat-ui.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>	
+
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-local-storage/0.2.2/angular-local-storage.min.js"></script>
 
 	<style>
 		body{
@@ -60,6 +60,17 @@
 		    border: 1px solid #1FA2F3;
 		}
 
+		main{
+			margin-top: 10px;
+			padding:30px 20px 10px 20px;
+			background-color: #fff;
+		}
+
+		.addTaskContainer{
+			margin-bottom: 20px;
+		}
+
+		/*Override some UI styles*/
 		.form-control{
 			border: 1px solid #1FA2F3;
 		}
@@ -85,20 +96,21 @@
 		    background-color: #1FA2F3;
 		    border: 1px solid #1FA2F3;
 		}
-
-		main{
-			margin-top: 10px;
-			padding:30px 20px 10px 20px;
-			background-color: #fff;
-		}
-
-		.addTaskContainer{
-			margin-bottom: 20px;
-		}
-
 	</style>
+	<script type="text/javascript">
+		var app = angular.module("ToDoList", ["LocalStorageModule"]);
+		app.controller("ToDoController", function($scope, localStorageService){
+			$scope.tasks = [];
+			$scope.addNewTask = function(){
+				if($scope.newTask){
+					$scope.tasks.push($scope.newTask);
+					$scope.newTask = "";
+				}
+			};
+		});
+	</script>
 </head>
-<body>
+<body ng-controller="ToDoController">
 	<header>
 		<div id="logo">
 			<h1>ToDo<span>List</span></h1>
@@ -117,40 +129,27 @@
 
 	<main class="container">
 		<div class="addTaskContainer">
-			<a href="javascript:;"><span class="fui-plus"></span> Add new task</a>
+			<a class="addNewTask" href="javascript:;"><span class="fui-plus"></span> Add new task</a>
+			<a class="cancelNewTask" href="javascript:;"><span class="fui-cross"></span> Cancel</a>
 		    <div class="input-group">
-		      <input type="text" class="form-control" placeholder="Buy a new car">
+		      <input type="text" class="form-control" ng-model="newTask" placeholder="Buy a new car">
 		      <span class="input-group-btn">
-		        <button class="btn btn-info" type="button">Add Task</button>
+		        <button class="btn btn-info" ng-click="addNewTask()" type="button">Add Task</button>
 		      </span>
 		    </div>
 		</div>
 
 		<div class="list-group">
-		  <a href="#" class="list-group-item">
-			  <label class="checkbox" for="task1">
-	            <input type="checkbox" id="task1" class="custom-checkbox">
+		  <a href="javascript:;" ng-repeat="task in tasks" class="list-group-item">
+			  <label class="checkbox" for="task{{$index}}">
+	            <input type="checkbox" id="task{{$index}}" class="custom-checkbox">
 	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-	            Task 1
-	          </label>
-          </a>
-		  <a href="#" class="list-group-item">
-			  <label class="checkbox" for="task2">
-	            <input type="checkbox" id="task2" class="custom-checkbox">
-	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-	            Task 2
-	          </label>
-          </a>
-		  <a href="#" class="list-group-item">
-			  <label class="checkbox" for="task3">
-	            <input type="checkbox" id="task3" class="custom-checkbox">
-	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-	            Task 3
+	            {{task}}
 	          </label>
           </a>
 		</div>
 		<div class="alert alert-info" role="alert">
-			You haven't Tasks, Please <a href="javascript:;">Add a new task</a> for be part of the magic!
+			You haven't Tasks, Please <a class="addNewTask" href="javascript:;">Add a new task</a> for be part of the magic!
 		</div>
 	</main>
 </body>
