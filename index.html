@@ -69,6 +69,15 @@
 			color: #83CCFA;
 		}
 
+		.checkbox input[type=checkbox].custom-checkbox:checked+.icons .icon-checked{
+			color:#1FA2F3;
+		}
+
+		.list-group-item {
+			    padding: 0 10px;
+		}
+
+
 		main{
 			margin-top: 10px;
 			background-color: #fafafa;
@@ -100,10 +109,29 @@
 			<a href="#">Cancel</a>
 		</form>
 
-		<ul>
-			<li><input type="checkbox">Task 1</li>
-			<li><input type="checkbox">Task 2</li>
-		</ul>
+		<div class="list-group">
+		  <a href="#" class="list-group-item">
+			  <label class="checkbox" for="task1">
+	            <input type="checkbox" id="task1" class="custom-checkbox">
+	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+	            Task 1
+	          </label>
+          </a>
+		  <a href="#" class="list-group-item">
+			  <label class="checkbox" for="task2">
+	            <input type="checkbox" id="task2" class="custom-checkbox">
+	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+	            Task 2
+	          </label>
+          </a>
+		  <a href="#" class="list-group-item">
+			  <label class="checkbox" for="task3">
+	            <input type="checkbox" id="task3" class="custom-checkbox">
+	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+	            Task 3
+	          </label>
+          </a>
+		</div>
 	</main>
 </body>
 </html>
