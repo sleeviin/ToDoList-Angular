@@ -112,10 +112,17 @@
 
 			$scope.addNewTask = function(){
 				if($scope.newTask){
-					$scope.tasks.push($scope.newTask);
+					$scope.tasks.push({
+						name:$scope.newTask,
+						isChecked:false
+					});
 					$scope.newTask = "";
 					document.getElementById("addTaskInput").focus();
 				}
+			};
+
+			$scope.saveCbxChange = function(){
+				localStorageService.set("todolist-storage", $scope.tasks)
 			};
 
 			$scope.keyEvent = function(k) {
@@ -136,7 +143,7 @@
             <span class="input-group-addon">
             	<span class="fui-search"></span>
             </span>
-            <input class="form-control" type="search" placeholder="Search">
+            <input ng-model="searchTask.name" class="form-control" type="search" placeholder="Search">
           </div>
         </div>
         <span class="clearfix"></span>
@@ -155,11 +162,11 @@
 		</div>
 
 		<div class="list-group">
-		  <a href="javascript:;" ng-repeat="task in tasks track by $index" class="list-group-item">
+		  <a href="javascript:;" ng-repeat="task in tasks | filter:searchTask track by $index" class="list-group-item">
 			  <label class="checkbox" for="task{{$index}}">
-	            <input type="checkbox" id="task{{$index}}" class="custom-checkbox">
+	            <input ng-change="saveCbxChange()" ng-model="task.isChecked" type="checkbox" id="task{{$index}}" class="custom-checkbox" ng-checked="task.isChecked">
 	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-	            {{ task }}
+	            {{ task.name }}
 	          </label>
           </a>
 		</div>
