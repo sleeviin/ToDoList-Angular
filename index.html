@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.2.2/css/flat-ui.min.css">
 
+	<script src="https://cdn.jsdelivr.net/momentjs/2.10.6/moment.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-local-storage/0.2.2/angular-local-storage.min.js"></script>
 
@@ -70,6 +71,13 @@
 			margin-bottom: 20px;
 		}
 
+		.taskDate{
+		    position: absolute;
+		    bottom: 0;
+		    right: 10px;
+		    font-size: 10px;
+		}
+
 		/*Override some UI styles*/
 		.form-control{
 			border: 1px solid #1FA2F3;
@@ -97,6 +105,7 @@
 		    border: 1px solid #1FA2F3;
 		}
 	</style>
+
 	<script type="text/javascript">
 		var app = angular.module("ToDoList", ["LocalStorageModule"]);
 		app.controller("ToDoController", function($scope, $filter, localStorageService){
@@ -114,7 +123,8 @@
 				if($scope.newTask){
 					$scope.tasks.push({
 						name:$scope.newTask,
-						isChecked:false
+						isChecked:false,
+						date:new Date()
 					});
 					$scope.newTask = "";
 					document.getElementById("addTaskInput").focus();
@@ -135,14 +145,25 @@
 			    $scope.addNewTask();
 			}
 		});
+
+		app.filter('moment', [
+			function () {
+				return function (date, method) {
+					var momented = moment(date);
+					return momented[method].apply(momented, Array.prototype.slice.call(arguments, 2));
+				};
+			}
+		]);
 	</script>
 </head>
 <body ng-controller="ToDoController">
 	<header>
+
 		<div id="logo">
 			<h1>ToDo<span>List</span></h1>
 			<h2>By Alexander Guzmán</h2>
 		</div>
+
 		<div id="inputSearch" class="form-group">
           <div class="input-group">
             <span class="input-group-addon">
@@ -151,10 +172,13 @@
             <input ng-model="searchTask.name" class="form-control" type="search" placeholder="Search">
           </div>
         </div>
+
         <span class="clearfix"></span>
+
 	</header>
 
 	<main class="container">
+
 		<div class="addTaskContainer" ng-init="displayAddTask = false">
 			<a ng-show="!displayAddTask" ng-click="displayAddTask = true" href="javascript:;"><span class="fui-plus"></span> Add new task</a>
 			<a ng-show="displayAddTask"  ng-click="displayAddTask = false" class="text-danger" href="javascript:;"><span class="fui-cross"></span> Cancel</a>
@@ -173,14 +197,18 @@
 	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
 	            {{ task.name }}
 	          </label>
+	          <span class="taskDate">{{ task.date | moment:'fromNow' }}</span>
           </a>
 		</div>
+
 		<div ng-hide="tasks<=0" class="pull-right">
 			<a ng-click="removeCheckedItems()" class="text-danger" href="javascript:;">Remove Checked Items <span class="fui-trash"></span></a>
 		</div>
+
 		<div ng-show="tasks<=0" class="alert alert-info" role="alert">
 			You haven't Tasks, Please <a ng-click="displayAddTask = true" href="javascript:;">Add a new task</a> for be part of the magic!
 		</div>
+
 	</main>
 </body>
 </html>
