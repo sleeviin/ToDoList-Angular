@@ -100,13 +100,23 @@
 	<script type="text/javascript">
 		var app = angular.module("ToDoList", ["LocalStorageModule"]);
 		app.controller("ToDoController", function($scope, localStorageService){
-			$scope.tasks = [];
+			if(localStorageService.get("todolist-storage")){
+				$scope.tasks = localStorageService.get("todolist-storage");
+			}else{
+				$scope.tasks = [];
+			}
 			$scope.addNewTask = function(){
 				if($scope.newTask){
 					$scope.tasks.push($scope.newTask);
 					$scope.newTask = "";
+					localStorageService.set("todolist-storage", $scope.tasks)
 				}
 			};
+
+			$scope.keyEvent = function(k) {
+			  if (k.which === 13)
+			    $scope.addNewTask();
+			}
 		});
 	</script>
 </head>
@@ -132,7 +142,7 @@
 			<a class="addNewTask" href="javascript:;"><span class="fui-plus"></span> Add new task</a>
 			<a class="cancelNewTask" href="javascript:;"><span class="fui-cross"></span> Cancel</a>
 		    <div class="input-group">
-		      <input type="text" class="form-control" ng-model="newTask" placeholder="Buy a new car">
+		      <input type="text" class="form-control" ng-model="newTask" ng-keypress="keyEvent($event)" placeholder="Buy a new car">
 		      <span class="input-group-btn">
 		        <button class="btn btn-info" ng-click="addNewTask()" type="button">Add Task</button>
 		      </span>
