@@ -105,11 +105,16 @@
 			}else{
 				$scope.tasks = [];
 			}
+
+			$scope.$watchCollection("tasks", function(n,o){
+				localStorageService.set("todolist-storage", $scope.tasks)
+			});
+
 			$scope.addNewTask = function(){
 				if($scope.newTask){
 					$scope.tasks.push($scope.newTask);
 					$scope.newTask = "";
-					localStorageService.set("todolist-storage", $scope.tasks)
+					document.getElementById("addTaskInput").focus();
 				}
 			};
 
@@ -138,11 +143,11 @@
 	</header>
 
 	<main class="container">
-		<div class="addTaskContainer">
-			<a class="addNewTask" href="javascript:;"><span class="fui-plus"></span> Add new task</a>
-			<a class="cancelNewTask" href="javascript:;"><span class="fui-cross"></span> Cancel</a>
-		    <div class="input-group">
-		      <input type="text" class="form-control" ng-model="newTask" ng-keypress="keyEvent($event)" placeholder="Buy a new car">
+		<div class="addTaskContainer" ng-init="displayAddTask = false">
+			<a ng-show="!displayAddTask" ng-click="displayAddTask = true" href="javascript:;"><span class="fui-plus"></span> Add new task</a>
+			<a ng-show="displayAddTask"  ng-click="displayAddTask = false" href="javascript:;"><span class="fui-cross"></span> Cancel</a>
+		    <div ng-show="displayAddTask" class="input-group">
+		      <input id="addTaskInput" type="text" class="form-control" ng-model="newTask" ng-keypress="keyEvent($event)" placeholder="Buy a new car">
 		      <span class="input-group-btn">
 		        <button class="btn btn-info" ng-click="addNewTask()" type="button">Add Task</button>
 		      </span>
@@ -150,16 +155,16 @@
 		</div>
 
 		<div class="list-group">
-		  <a href="javascript:;" ng-repeat="task in tasks" class="list-group-item">
+		  <a href="javascript:;" ng-repeat="task in tasks track by $index" class="list-group-item">
 			  <label class="checkbox" for="task{{$index}}">
 	            <input type="checkbox" id="task{{$index}}" class="custom-checkbox">
 	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-	            {{task}}
+	            {{ task }}
 	          </label>
           </a>
 		</div>
-		<div class="alert alert-info" role="alert">
-			You haven't Tasks, Please <a class="addNewTask" href="javascript:;">Add a new task</a> for be part of the magic!
+		<div ng-show="tasks<=0" class="alert alert-info" role="alert">
+			You haven't Tasks, Please <a ng-click="displayAddTask = true" href="javascript:;">Add a new task</a> for be part of the magic!
 		</div>
 	</main>
 </body>
