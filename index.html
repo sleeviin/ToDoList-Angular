@@ -6,9 +6,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.2.2/css/flat-ui.min.css">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
 
 	<script src="https://cdn.jsdelivr.net/momentjs/2.10.6/moment.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.9.0/angular-moment.min.js"></script>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-local-storage/0.2.2/angular-local-storage.min.js"></script>
 
 	<style>
@@ -107,7 +110,7 @@
 	</style>
 
 	<script type="text/javascript">
-		var app = angular.module("ToDoList", ["LocalStorageModule"]);
+		var app = angular.module("ToDoList", ["LocalStorageModule", "angularMoment"]);
 		app.controller("ToDoController", function($scope, $filter, localStorageService){
 			if(localStorageService.get("todolist-storage")){
 				$scope.tasks = localStorageService.get("todolist-storage");
@@ -145,15 +148,6 @@
 			    $scope.addNewTask();
 			}
 		});
-
-		app.filter('moment', [
-			function () {
-				return function (date, method) {
-					var momented = moment(date);
-					return momented[method].apply(momented, Array.prototype.slice.call(arguments, 2));
-				};
-			}
-		]);
 	</script>
 </head>
 <body ng-controller="ToDoController">
@@ -197,7 +191,7 @@
 	            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
 	            {{ task.name }}
 	          </label>
-	          <span class="taskDate">{{ task.date | moment:'fromNow' }}</span>
+	          <span class="taskDate" am-time-ago="task.date"></span>
           </a>
 		</div>
 
